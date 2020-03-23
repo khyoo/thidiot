@@ -4,8 +4,8 @@ var router = express.Router();
 
 const servicekey = conf_json.serviceKey;
 
-/* 기상청 동네예보 조회 */
-router.get('/get/data/forecast', function (req, res, next) {
+/* 기상청 실시간 날씨 조회 */
+router.get('/get/data/rtweather', function (req, res, next) {
   var rs = dfs_xy_conv("toXY", req.query.lat, req.query.lng);
   // http://localhost:36000/openapi/weather/forecast/get/data/forecast?lat=35.823431&lng=127.157041
 
@@ -25,6 +25,42 @@ router.get('/get/data/forecast', function (req, res, next) {
   }
 
   var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst';
+  var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + servicekey; /* Service Key*/  
+  queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* 페이지번호 */
+  queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* 한 페이지 결과 수 */
+  queryParams += '&' + encodeURIComponent('dataType') + '=' + encodeURIComponent('JSON'); /* 요청자료형식(XML/JSON)Default: XML */
+  queryParams += '&' + encodeURIComponent('base_date') + '=' + encodeURIComponent(base_date); /*  */
+  queryParams += '&' + encodeURIComponent('base_time') + '=' + encodeURIComponent(base_time); /*  */
+  queryParams += '&' + encodeURIComponent('nx') + '=' + encodeURIComponent(rs.x); /*  */
+  queryParams += '&' + encodeURIComponent('ny') + '=' + encodeURIComponent(rs.y); /*  */
+
+  request({
+    url: url + queryParams,
+    method: 'GET'
+  }, function (error, response, body) {
+    //console.log('Status', response.statusCode);
+    //console.log('Headers', JSON.stringify(response.headers));
+    // console.log('Reponse received', body);
+
+    res.json(JSON.parse(body)); 
+  });
+});
+
+/* 기상청 동네예보 조회 */
+router.get('/get/data/forecast', function (req, res, next) {
+  var rs = dfs_xy_conv("toXY", req.query.lat, req.query.lng);
+  // http://localhost:36000/openapi/weather/forecast/get/data/forecast?lat=35.823431&lng=127.157041
+
+  var today = new Date();
+  var year = today.getFullYear();
+  var month = today.getMonth()+1;
+  var day = today.getDate();
+
+  var base_date = year + (("00"+month.toString()).slice(-2)) + (("00"+day.toString()).slice(-2));
+
+  var base_time = "0500";
+
+  var url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst';
   var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + servicekey; /* Service Key*/  
   queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /* 페이지번호 */
   queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /* 한 페이지 결과 수 */
