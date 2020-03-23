@@ -1,0 +1,10 @@
+{
+    "pg": {
+        "host": "202.31.147.196",
+        "user": "postgres",
+        "password": "mcalab3408",
+        "database": "thidiot",
+        "port": 5432
+    },
+    "serviceKey": "d6jaYPOmc0Pa1m83x3zueNB3pF6MOKZireJOZo7dkIqOS%2BD7JakOH1FZjdaUTulBgFjU3TQaaXjFqhgmUomXKA%3D%3D"
+}
