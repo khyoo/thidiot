@@ -4,6 +4,19 @@ var router = express.Router();
 
 const servicekey = conf_json.serviceKey;
 
+/*  */
+router.post('/get/data/test', function (req, res, next) {
+  console.log(req.body);
+  // http://localhost:36000/openapi/weather/forecast/get/data/test?lat=35.823431&lng=127.157041
+
+  
+
+  // var result= {"lat":req.body.lat,"lng":req.body.lng};
+  res.redirect("http://member.shift.co.kr/xg-manual/data/data.xml");
+
+});
+
+
 /* 기상청 실시간 날씨 조회 */
 router.get('/get/data/rtweather', function (req, res, next) {
   var rs = dfs_xy_conv("toXY", req.query.lat, req.query.lng);
